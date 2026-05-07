@@ -1,8 +1,6 @@
 ---
-title: Doro's Knowledge Base
+title: mykb
 ---
-
-# Doro's Knowledge Base
 
 ## Pages
 
