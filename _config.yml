@@ -1,5 +1,6 @@
-title: mykb
-description: Doro's public knowledge base.
+title: Doro's public knowledge base.
+url: https://kb.dorowu.cc
+baseurl: ""
 theme: jekyll-theme-cayman
 markdown: kramdown
 plugins:

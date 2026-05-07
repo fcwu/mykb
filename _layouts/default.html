@@ -17,12 +17,15 @@
 
     <header class="page-header" role="banner">
       <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
-      <h2 class="project-tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
+      {% assign tagline = page.description | default: site.description %}
+      {% if tagline and tagline != "" %}
+      <h2 class="project-tagline">{{ tagline }}</h2>
+      {% endif %}
     </header>
 
     <main id="content" class="main-content" role="main">
       {% if page.url != "/" and page.url != "/index.html" %}
-        <p><a href="{{ '/' | relative_url }}">← Back to home</a></p>
+        <p><a href="/">← Back to home</a></p>
       {% endif %}
 
       {{ content }}
