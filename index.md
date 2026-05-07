@@ -1,4 +1,5 @@
 ---
+title: Doro's public knowledge base.
 ---
 
 ## Pages

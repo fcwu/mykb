@@ -17,10 +17,6 @@
 
     <header class="page-header" role="banner">
       <h1 class="project-name">{{ page.title | default: site.title | default: site.github.repository_name }}</h1>
-      {% assign tagline = page.description | default: site.description %}
-      {% if tagline and tagline != "" %}
-      <h2 class="project-tagline">{{ tagline }}</h2>
-      {% endif %}
     </header>
 
     <main id="content" class="main-content" role="main">
