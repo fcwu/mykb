@@ -1,5 +1,5 @@
 ---
-title: Doro's public knowledge base.
+title: Doro Digest
 ---
 
 ## Pages
