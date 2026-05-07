@@ -4,8 +4,6 @@ title: Doro's Knowledge Base
 
 # Doro's Knowledge Base
 
-Selected notes shared publicly.
-
 ## Pages
 
 <!-- AUTO-INDEX:START -->
