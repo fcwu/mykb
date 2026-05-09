@@ -3,8 +3,6 @@ title: Doro Digest
 description: Doro 的個人筆記摘要與外部素材整理
 ---
 
-> [📡 訂閱 RSS](feed.xml)
-
 ## 最新
 
 {% assign content_pages = site.pages | where_exp: "p", "p.category" | sort: "date" | reverse %}
