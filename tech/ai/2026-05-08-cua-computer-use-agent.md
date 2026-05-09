@@ -13,6 +13,8 @@ tags: [computer-use, agent, automation, sandbox, vm, lume, mcp, claude-code, xvf
 
 # CUA — Computer-Use Agent Infrastructure
 
+> **來源**：[trycua/cua · GitHub](https://github.com/trycua/cua)（擷取於 2026-04-25）
+
 ## 簡介
 
 CUA 是開源的 Computer-Use Agent 基礎設施，提供沙盒（Sandbox）、SDK、driver 與 Benchmark，用於訓練、部署、評估能控制完整桌面環境的 AI Agent。
