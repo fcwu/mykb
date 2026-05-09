@@ -4,19 +4,11 @@ type: source
 tags: [ai, agent, harness-engineering, agents-md, feedback, steering-vector, lifelong-agent, meta-harness]
 created: 2026-05-08
 updated: 2026-05-08
-sources:
-  - raw/tech/ai/2026-05-08-yt-harness-li-hung-yi/
-related:
-  - wiki/concepts/ai-agent-design
-  - wiki/sources/2026-04-07-harness-engineering
-  - wiki/sources/2026-04-20-harness-engineering-youtube
-  - wiki/synthesis/ai-feedback-engineering
-  - wiki/entities/claude-code
 ---
 
 # Harness Engineering：有時候語言模型不是不夠聰明，只是沒有人類好好引導（李宏毅）
 
-> **來源**：`raw/tech/ai/2026-05-08-yt-harness-li-hung-yi/`（YouTube: https://www.youtube.com/watch?v=R6fZR_9kmIw，台大 Hung-yi Lee，2026-04-12 發布，1h32m）
+> **來源**：YouTube — <https://www.youtube.com/watch?v=R6fZR_9kmIw>，台大 Hung-yi Lee，2026-04-12 發布，1h32m
 > **類型**：article（影片摘要）
 > **摘要日期**：2026-05-08
 
@@ -43,14 +35,11 @@ related:
 
 > **模型不是笨，是缺人類的引導。**
 
-→ 這跟 Notes2 用 `CLAUDE.md` 引導 Claude Code 的做法是同一套機制。
-
 ### 2. agents.md 是地圖，不是百科全書
 
 - **OpenAI 提醒**：agents.md 不能像「百科全書」、「六法全書」，要像**地圖**——告訴模型「想找 X 去哪裡找」，而不是把所有規則塞進來把 context 撐爆。
 - **1 月 paper**：量到 agents.md 能加快 token 消耗速度。
 - **2 月 paper**：發現 LLM 自己寫的 agents.md 反而比沒有更糟，人類寫的也不總是有用——「我們還沒真的會操控 LLM」。
-- → 對 Notes2 的啟示：`CLAUDE.md` / `USER.md` 維持**短、指向其他檔案**的策略，避免規則膨脹。
 
 ### 3. 工具設計反直覺（SWE-agent paper, 2024）
 
@@ -89,7 +78,6 @@ related:
 
 - **AutoDream**（Claude Code 隱藏功能，因 Claude Code 程式碼外洩才被知道）：當 agent 沒在被使用時，自動進入「睡眠」整理記憶——跟人類睡眠整理記憶的概念類似。
 - **李宏毅的小金跑了兩個月後** `memory.md` 漲到 32K，叫它整理一次後變 7K，跑起來順暢很多。
-- → 對 Notes2 的啟示：定期 `lint wiki`、整理 inbox、整理 memory，是同一個概念在不同層級的表現。
 
 ### 8. AI Agent 評量陷阱
 
@@ -112,25 +100,6 @@ related:
 最終 agent.md 大致長這樣：「你的環境是這樣 / 你有這些工具 / 第一步先 ls 看資料夾 / 動手前先讀完題目提到的檔案，避免 hallucination。」
 
 李宏毅自承實驗有瑕疵（沒做跨 LLM、沒做跨 task），但 **Anthropic 的 meta-harness paper 把這些都做完了**——結論：**Opus 真的有能力幫其他模型設計 Harness**。
-
----
-
-## 與 Doro 工作的連結
-
-- **CLAUDE.md + kb / todo / schedule agent 結構，正好就是這支影片講的「Harness」設計**：
-  - 認知框架：`CLAUDE.md` / `USER.md`
-  - 能力邊界：agent 工具白名單
-  - 行為流程：triage → ingest 的 SOP
-- **「不要過度責備模型」** 蠻有意思——給回饋時值得保持就事論事的語氣。
-- **AutoDream / 整理 memory** → 對應到 Notes2 的定期 `lint wiki`、整理 inbox，是同一個概念在不同層級的表現。
-- **Sonnet 有 context 焦慮、Opus 沒有** → 對應挑模型時的判斷：寫長文/做大型重構偏 Opus，短任務或工具呼叫密集的 loop 用 Sonnet/Haiku。
-
----
-
-## 整合至 wiki
-
-- 更新了 [[wiki/concepts/ai-agent-design]]：補充 agents.md 反效果、工具設計反直覺、過度責備風險、Sonnet vs Opus harness 差異、meta-harness
-- 新增了 [[wiki/synthesis/ai-feedback-engineering]]：給 AI 回饋的工程化原則（情緒向量 + verbalized feedback + Doro 觀察）
 
 ---
 
