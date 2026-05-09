@@ -2,13 +2,15 @@
 type: source
 source_type: youtube
 title: 2026 年投資第一堂課『價值十億元的投資講座』第一章
+date: 2026-05-05
+category: investing
+description: 2026 CLEC『價值十億元的投資講座』第一章（世界觀篇）摘要與批判
 channel: CLEC 投資理財頻道
 url: https://www.youtube.com/watch?v=UQJhULjHzR4
 duration: 00:56:15
 upload_date: 2026-05-05
 captured_at: 2026-05-07
 transcript_source: Whisper ASR (medium)
-related: ../2026-05-07-yt-clec-investment-lecture-ch02/summary.md
 ---
 
 # 2026 年投資第一堂課『價值十億元的投資講座』第一章

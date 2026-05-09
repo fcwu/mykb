@@ -1,7 +1,11 @@
 ---
+title: CUA — Computer-Use Agent Infrastructure
 type: clipping
 source: GitHub - trycua/cua
 url: https://github.com/trycua/cua
+date: 2026-05-08
+category: ai-agent
+description: trycua/cua 深度技術分析：macOS SkyLight + AX 內部、Windows UIA 實作、Linux Xvfb 替代、三平台對照、agent stack 決策樹
 captured: 2026-04-25
 updated: 2026-05-08
 tags: [computer-use, agent, automation, sandbox, vm, lume, mcp, claude-code, xvfb, linux, windows, playwright, uia]

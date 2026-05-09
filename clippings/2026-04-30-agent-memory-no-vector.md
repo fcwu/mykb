@@ -1,3 +1,10 @@
+---
+title: Agent Memory：大多數記憶系統不需要向量檢索
+date: 2026-04-30
+category: ai-agent
+description: 五個業界產品（ChatGPT/Claude Code/Anthropic/OpenAI/Mastra）的記憶設計分析，與分層組合的工程代價
+---
+
 # Agent Memory：大多數記憶系統不需要向量檢索
 
 **來源：** https://blog.aihao.tw/2026/04/28/agent-memory-no-vector/

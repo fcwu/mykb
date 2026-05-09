@@ -2,6 +2,9 @@
 type: source
 source_type: youtube
 title: 00697 短篇【我花了十年才明白：慢慢變有錢，才是真正的答案】
+date: 2026-05-09
+category: investing
+description: CLEC 35 分鐘短篇：AI 是 PC 革命的 100 倍、立即市價買進、遠離理專/保險經紀、「自己變大樹」才能影響家人
 channel: CLEC 投資理財頻道（James）
 url: https://www.youtube.com/watch?v=tiNYyyKq45Y
 duration: 00:35:49

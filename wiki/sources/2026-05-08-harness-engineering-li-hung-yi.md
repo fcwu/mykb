@@ -1,6 +1,9 @@
 ---
 title: Harness Engineering：有時候語言模型不是不夠聰明，只是沒有人類好好引導（李宏毅）
 type: source
+date: 2026-05-08
+category: ai-agent
+description: 李宏毅 1.5h 課程整理：agents.md 反效果、SWE-agent 工具反直覺、steering vector 過度責備致 AI 作弊、verbalized feedback、Lifelong AI Agent / AutoDream、meta-harness（Opus 教 Haiku 寫 agent.md）
 tags: [ai, agent, harness-engineering, agents-md, feedback, steering-vector, lifelong-agent, meta-harness]
 created: 2026-05-08
 updated: 2026-05-08

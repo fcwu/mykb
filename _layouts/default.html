@@ -10,6 +10,7 @@
     <meta name="theme-color" content="#157878">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ '/feed.xml' | relative_url }}">
     {% include head-custom.html %}
   </head>
   <body>
@@ -20,9 +21,12 @@
     </header>
 
     <main id="content" class="main-content" role="main">
-      {% if page.url != "/" and page.url != "/index.html" %}
-        <p><a href="/">← Back to home</a></p>
-      {% endif %}
+      <nav style="margin-bottom: 1.5em; font-size: 0.9em;">
+        <a href="{{ '/' | relative_url }}">首頁</a> ·
+        <a href="{{ '/categories/ai-agent.html' | relative_url }}">AI / Agent</a> ·
+        <a href="{{ '/categories/investing.html' | relative_url }}">投資理財</a> ·
+        <a href="{{ '/feed.xml' | relative_url }}">📡 RSS</a>
+      </nav>
 
       {{ content }}
 

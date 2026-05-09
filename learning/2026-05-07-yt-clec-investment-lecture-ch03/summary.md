@@ -2,6 +2,9 @@
 type: source
 source_type: youtube
 title: 2026 年投資第一堂課『價值十億元的投資講座』第三章
+date: 2026-05-06
+category: investing
+description: 2026 CLEC『價值十億元的投資講座』第三章（操作配置篇）：5 種資產配置 / 提領率 / 再平衡，附模擬黑箱與覆蓋率批判
 channel: CLEC 投資理財頻道
 url: https://www.youtube.com/watch?v=kdOpZUir48I
 duration: 00:32:30

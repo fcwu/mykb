@@ -2,6 +2,9 @@
 type: source
 source_type: youtube
 title: 2026 年投資第一堂課『價值十億元的投資講座』第二章
+date: 2026-05-05
+category: investing
+description: 2026 CLEC『價值十億元的投資講座』第二章（QQQ 與不要碰的標的）摘要與批判
 channel: CLEC 投資理財頻道
 url: https://www.youtube.com/watch?v=XpPkNPiA2dA
 duration: 00:42:20
