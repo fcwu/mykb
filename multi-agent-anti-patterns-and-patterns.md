@@ -1,6 +1,6 @@
 ---
 title: Multi-Agent 架構再探 — 三省六部反模式與業界收斂共識
-date: 2026-05-19
+date: 2026-05-21
 category: ai-agent
 description: 2026 業界對 Multi-Agent 的收斂共識：四大反模式（更多 Agent 迷思／三省六部幻覺／固定 workflow ／生產隱藏成本）、Anthropic 三場景五模式、LangChain 四模式、Cognition 寫入單線程、動態子代理生成。
 tags: [ai, agent, multi-agent, claude, anthropic, langchain, cognition, anti-pattern]
