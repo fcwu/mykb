@@ -1,6 +1,6 @@
 ---
 title: The Founder's Playbook — 用 Claude 打造 AI-Native 新創
-date: 2026-05-14
+date: 2026-05-20
 category: ai-agent
 description: Anthropic 給 founder 的 AI-native 創業手冊摘要：四階段（Idea / MVP / Launch / Scale）的失敗模式、Claude 三介面的分工、可執行 exercise 與案例公司數據。
 tags: [ai, agent, claude, claude-code, founder, startup, anthropic]
