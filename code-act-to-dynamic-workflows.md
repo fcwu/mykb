@@ -108,6 +108,18 @@ Anthropic 的做法：在工具定義加 `allowed_callers: ["code_execution_2026
 4. **中間結果完全不進 Claude 的 context window，也不計入 token**
 5. 整段程式碼跑完，Claude 只收到最後的 stdout
 
+### 「allowlist」的精神
+
+`allowed_callers` 是**白名單**而非全開 — 你逐個工具點頭「這個能被容器呼叫」。對危險工具（刪資料、付款、發 email）可以**故意不加** allowlist，保留「只能 Claude 直接呼叫一次」，避免被程式碼裡的迴圈意外連發。這就是上面對照表寫的「結果留在程式碼、**保住控制面**」的具體機制：程式碼能組合工具沒錯，但用 allowlist 決定哪些能組合。
+
+對比：
+
+| | 結果走向 | 誰能用工具 |
+|---|---|---|
+| 一般工具呼叫 | 全塞回 Claude context | 全靠 prompt 約束 |
+| Code Execution（無 PTC） | 留在容器 | 碰不到 agent tools |
+| **PTC（有 allowlist）** | **留在容器** | **明確白名單** |
+
 ### 適用 / 不適用
 
 - ✅ 大量平行分流、結果很大可先在程式碼裡過濾
@@ -267,13 +279,32 @@ parallel(Array.from({ length: 3 }, (_, v) => () =>
 <details>
 <summary><b>8. 決定性執行與 Resume 機制（技術細節，可略讀）</b></summary>
 
+### Resume 怎麼運作？memoization 的比喻
+
+把 workflow 想成函式，每個 `agent()` 想成「**昂貴的純函式**」— resume 就是 [memoization](https://en.wikipedia.org/wiki/Memoization)：
+
+1. 第一次跑：每個 `agent(prompt, opts)` 的結果寫進執行日誌（jsonl 檔）
+2. 中途中斷後 resume：harness 從頭重跑腳本，每碰到 `agent(...)` **先去日誌查**
+3. `(prompt, opts)` 對得上 → **秒回快取結果，不花 token**
+4. 第一個對不上的開始，從那裡往後跑真的
+
+**具體場景**：80 個 agent 的 workflow 跑到第 50 個爆掉 → resume 時前 49 個秒回、第 50 個開始 live。
+
 ### 為什麼禁用 `Date.now()` / `Math.random()`
 
-Workflow 把每一個 `agent()` 呼叫的結果寫進**執行日誌**，這樣中斷後可以**原地接續（resume）**。一旦腳本摻了時間或亂數，重跑時對不起來，日誌快取失效。
+Memoization 的前提是「相同輸入 → 相同 key」。一旦腳本寫：
+
+```javascript
+const ts = Date.now()                         // ❌ 每次值不同
+const prompt = `任務 ${ts}：分析資料`
+await agent(prompt, ...)
+```
+
+第二次跑時 `prompt` 字串會變，日誌裡找不到相符的紀錄 → cache 永遠 miss，resume 全廢。`Math.random()`、無參數的 `new Date()` 同理。
 
 替代方案：
-- 要時間戳：從 `args` 傳進來
-- 要差異化：用 index 變化 prompt / label
+- 要時間戳：從 `args` 傳進來（args 也是 cache key 的一部分）
+- 要差異化：用 index 變化，例如 `agent(`Verifier #${i}: ${claim}`)` — `i` 是 deterministic 的迴圈變數
 
 ### 模型教導 prompt（示意）
 
