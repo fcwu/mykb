@@ -1,14 +1,14 @@
 ---
-title: 本地 LLM × KV Cache × 硬體：LM Studio、Strix Halo vs DGX Spark
+title: 本地 LLM × KV Cache × 硬體：LM Studio、Strix Halo vs DGX Spark vs Apple M5 Pro
 date: 2026-06-06
 category: ai-agent
-description: LM Studio Unified KV Cache 原理、head_dim 效應、GTT、Prefill vs Decode 根本差異、Strix Halo（AMD AI Max+ 395）vs DGX Spark 實測對照。
-tags: [ai, llm, local-inference, kv-cache, hardware, amd, nvidia, strix-halo, dgx-spark]
+description: KV cache 原理、Unified KV Cache、head_dim 差異、Prefill vs Decode 根本差異，以及 Strix Halo、DGX Spark、Apple M5 Pro 的跨平台 prefill 實測比較。
+tags: [ai, llm, local-inference, kv-cache, hardware, amd, nvidia, apple-silicon, strix-halo, dgx-spark, m5-pro]
 ---
 
-# 本地 LLM × KV Cache × 硬體：LM Studio、Strix Halo vs DGX Spark
+# 本地 LLM × KV Cache × 硬體：LM Studio、Strix Halo vs DGX Spark vs Apple M5 Pro
 
-> 整理自對話：LM Studio 的 Unified KV Cache、KV cache 原理、Qwen3 MoE 與 Gemma 4 的 VRAM 差異、Strix Halo (AMD AI Max+ 395) 與 NVIDIA DGX Spark 的效能比較。
+> **來源**：整理自技術對話（2026-06-06）；Apple M5 Pro 數據為 Doro 實測，Strix Halo 數據來自 [llm-tracker.info](https://llm-tracker.info/AMD-Strix-Halo-(Ryzen-AI-Max+-395)-GPU-Performance)，M5 Max 數據來自 [GitHub benchmark](https://github.com/itsmostafa/inference-speed-tests)
 
 ## 核心觀點
 
@@ -58,8 +58,6 @@ tags: [ai, llm, local-inference, kv-cache, hardware, amd, nvidia, strix-halo, dg
 - 76 TOPS ≈ Radeon 8060S iGPU + CPU
 - **LM Studio 跑 LLM 實際看的是 iGPU 頻寬，而非 TOPS**；LLM 用 FP16 ≈ INT8 的一半算力
 
----
-
 ## 關鍵洞見
 
 ### Strix Halo vs DGX Spark 規格對照
@@ -84,40 +82,32 @@ tags: [ai, llm, local-inference, kv-cache, hardware, amd, nvidia, strix-halo, dg
 
 **結論**：兩台「吐字速度」同級（都被 ~256–273 GB/s 頻寬鎖死）；DGX Spark 的價值在 prefill / 訓練 / 影像生成 / CUDA 生態，不是讓聊天生成變快。
 
----
+### 跨平台 Prefill 比較（含 Apple M5 Pro 實測）
 
-## 四個心智模型
+> Doro 實測：M5 Pro 48GB × Qwen3.6-35B-A3B × 7K token prompt，2026-06-06
+
+| 硬體 | 模型 | Prompt | Prefill tok/s | 來源 |
+|------|------|--------|--------------|------|
+| M5 Pro 48GB | Qwen3.6-35B-A3B | 7K token | **1,212** | Doro 實測 2026-06-06 |
+| M5 Max 128GB | Qwen3.5-9B 4-bit | 22K token | 2,614 | GitHub benchmark |
+| DGX Spark (GB10) | GPT-OSS 120B | 128K | ~1,723 | 未獨立驗證，120B 規模 |
+| Strix Halo (AI Max+ 395) | Qwen3-30B-A3B 4-bit | pp512 | 119 | llm-tracker.info |
+
+**M5 Pro vs Strix Halo（同為 MoE 30–35B 等級）**：M5 Pro 的 1,212 tok/s 約為 Strix Halo 的 **10 倍**，根本原因是 MLX 在 Apple Silicon 的 GPU 利用率遠優於 AMD APU 上的 ROCm / Vulkan。
+
+> 注意：DGX Spark 的 ~1,723 tok/s 是 120B 規模模型，M5 Pro 的 1,212 tok/s 是 35B MoE，規模不同，不宜直接比較；列於此表供數量級參考。
+
+### 四個心智模型
 
 1. **第一個字等多久 = 算力問題；之後吐字多快 = 頻寬問題。**
 2. **KV cache 在載入時就定案**（由 context length 決定），不是用著用著才長。
 3. **MoE 救 decode、不救 prefill、不省 KV cache。**
 4. **head_dim 是 KV cache 的隱藏放大器**：Gemma 4 大、Qwen 小，所以小模型不一定省 VRAM。
 
----
+## 原文重點段落
 
-## 術語速查
+> KV cache 在「載入模型當下」就依 `context_length` 一次預先配置 (preallocate) 完成，不會隨對話變長才爬升。設越長 → 載入瞬間就吃越多。
 
-| 術語 | 一句話解釋 | 跟什麼有關 / 重點 |
-|------|-----------|------------------|
-| **KV Cache** | 存過去 token 的 K/V，避免重算 | 大小 = 2 × 層數 × ctx × KV_head × head_dim × bytes；載入時一次預配 |
-| **Unified KV Cache** (LM Studio) | 並行請求共用同一個 KV 池 | 開啟省記憶體（`n_ctx×1` vs `n_ctx×n_seq_max`）；單人建議開 |
-| **KV Cache 量化** | 把 K/V 存成 q8/q4 | 直接降低 KV cache 佔用，輕微精度損失 |
-| **Context Length** | 模型一次能看的 token 數 | 決定 KV cache 預配大小；設越長載入時吃越多 |
-| **Unified Memory (UMA)** | CPU 與 iGPU 共用同一塊實體 RAM | AMD APU 硬體架構；經 GTT 存取 |
-| **GTT** | 讓 iGPU 把系統 RAM 當 VRAM 的機制 | BIOS VGM / Linux `amdttm.pages_limit` 調整 |
-| **MoE** | 多個 expert，每 token 只用一部分 | 省 decode（只讀 active 參數）；**不省 KV cache**；權重要全載入 |
-| **head_dim** | 每個注意力 head 的維度 | 直接放大/縮小 KV cache；Gemma4=256/512，Qwen=128 |
-| **SWA（滑動視窗注意力）** | 局部層只看最近 N 個 token | 限制 KV cache 成長（Gemma 用 5:1 局部:全域） |
-| **Flash Attention** | 不存完整 N×N 矩陣的注意力算法 | 省記憶體 + 加速；FA2 head_dim 上限 256 |
-| **Prefill** | 處理輸入 prompt 階段 | **吃算力 (compute-bound)** → TOPS/FLOPS |
-| **Decode** | 逐字生成輸出階段 | **吃頻寬 (bandwidth-bound)** → GB/s |
-| **TTFT** | Time To First Token，等第一個字的時間 | ≈ prefill 時間 ≈ prompt 長度 ÷ prefill 速度 |
-| **tok/s** | 每秒生成幾個 token | decode 速度；≈ 頻寬 ÷ 每 token 需讀的權重 bytes |
-| **TOPS** | 每秒幾兆次運算（整數） | `MAC × 2 × 時脈`；看精度；理論峰值 |
-| **記憶體頻寬** | 資料在記憶體↔處理器間的速度 | decode/tok/s 的**主要瓶頸** |
-| **Strix Halo** | AMD Ryzen AI Max+ 395 代號 | 128GB 統一記憶體 + iGPU，~256 GB/s |
-| **DGX Spark** | NVIDIA GB10 桌上型 AI 電腦 | 128GB，273 GB/s，1 PFLOP FP4，CUDA |
+> 真正讓 Gemma 4 爆 VRAM 的是它超大的 head_dim（sliding 層 256 / global 層 512），每個 token 的 K/V 比 head_dim=128 的 Qwen 重 2~4 倍，且 global 層隨 context 線性成長。
 
----
-
-*備註：實際數字會因模型、量化方式、context 長度、引擎/驅動版本而變動。本文為技術整理，不構成購買建議。*
+> 兩台「吐字速度」同級（都被 ~256–273 GB/s 頻寬鎖死）；DGX Spark 的價值在 prefill / 訓練 / 影像生成 / CUDA 生態，而不是讓聊天生成變快。
