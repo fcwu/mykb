@@ -31,6 +31,65 @@ description: 沿 CodeAct → Code Mode → PTC → Deep Agents → RLM → Dynam
 | **PTC・Deep Agents Interpreter**（Anthropic / LangChain） | agent tools，甚至開子代理人 | ✓ | 靠 allowlist 開放：**結果留在程式碼、保住控制面** |
 | **Dynamic Workflows**（Claude Code 2026/6） | 只有編排函式 `agent()` / `pipeline()` / `parallel()` | ✓ | 只能編排、禁時間亂數：**換到 resume、可重播、決定性** |
 
+### 五階段執行樹（讀光譜表前的視覺墊腳石）
+
+每張圖看三件事：**程式碼方框跟 tools 之間有沒有牆**、**結果走哪裡**、**有沒有第二顆腦袋**。
+
+**1. Code Interpreter** — 程式碼是眾多工具之一，**碰不到** agent tools。
+
+```
+Claude
+  ├── tool: search_db(...)              ← 一般工具
+  ├── tool: send_email(...)             ← 一般工具
+  └── tool: code_interpreter("...py...")  ← 隔離沙箱，碰不到上面兩個
+```
+
+**2. CodeAct** — 程式碼**就是行動本身**，可直接呼叫所有 agent tools；但結果仍回 Claude 看一輪再決定下一段。
+
+```
+Loop:
+  Claude
+    └── 寫一段 Python (= action)
+          ├── lookup_rate(...)
+          ├── lookup_price(...)
+          └── for / if / 變數傳遞
+  ← 結果回 Claude context (observation)
+  ← 看完決定下一段
+```
+
+**3. Code Mode** — 預先把幾千個 MCP API 收進 SDK，用 `search()` lazy load 簽名（**117 萬 → 1k token**）。
+
+```
+Claude
+  ├── tool: search("如何發 Slack")
+  │     ← 回傳 slack.sendMessage(...) 簽名 (lazy load)
+  └── tool: execute(`
+        await slack.sendMessage("#general", "hi");
+      `)
+```
+
+**4. PTC** — `allowed_callers` 把 agent tools 對程式碼開放，**中間結果留在容器**不回主 context。
+
+```
+Claude
+  └── 寫一段 Python (Anthropic 容器)
+        ├── query_db(sql)      ← allowlist 內才能用
+        ├── fetch_url(...)     ← 結果留在容器
+        └── print(最終答案)    ← Claude 只看到這個
+```
+
+**5. Dynamic Workflows** — 程式碼只能呼叫**編排原語**，由 `agent()` 開**新的 sub-Claude**（獨立 context）。
+
+```
+Claude
+  └── 寫一段 JavaScript 編排腳本
+        ├── agent("...")     → sub-Claude A (獨立 context)
+        ├── agent("...")     → sub-Claude B (獨立 context)
+        └── parallel([...])  → N 個 sub-Claudes 同時跑
+```
+
+**演化軸**：每一步都是「**在程式碼跟模型之間多放一道牆，換一種穩定性**」 — Code Interpreter 把程式碼擋在 loop 外（換運算精確）、CodeAct 拆掉牆（換表達力）、Code Mode 包進 SDK（換省 context）、PTC 隔離結果（換省 token）、Workflows 只准編排（換 resume + 結構性避病）。
+
 ---
 
 ## 1. CodeAct 的核心洞見
