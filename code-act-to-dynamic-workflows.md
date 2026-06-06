@@ -19,6 +19,18 @@ description: 沿 CodeAct → Code Mode → PTC → Deep Agents → RLM → Dynam
 
 > 一句話：**模型動態寫腳本，腳本決定性執行**。動的是「腳本被生出來」這一刻，跑起來就是規規矩矩、可重播的程式。
 
+### 一張表看完整條光譜（程式碼權限演變）
+
+主圖的視覺敘事用文字攤開：每一階段都是「限制了什麼 → 換到什麼穩定性」的取捨。
+
+| 階段 | 生成的程式碼呼叫什麼 | 能開子代理人? | 限制 → 換到的穩定性 |
+|---|---|---|---|
+| Code Interpreter | 只有 Python 套件、檔案（碰不到 agent 工具） | ✗ | 運算不設限，但**站在 agent loop 外** |
+| **CodeAct**（2024/2） | agent 的工具（固定函式） | ✗ | 幾乎不設限：**表達力最大，但最難控管** |
+| **Code Mode**（Cloudflare） | 包好的一整套 SDK（= 那套 API） | ✗ | 框在 SDK 內：**用熟悉的程式碼駕馭龐大 API、省上下文** |
+| **PTC・Deep Agents Interpreter**（Anthropic / LangChain） | agent tools，甚至開子代理人 | ✓ | 靠 allowlist 開放：**結果留在程式碼、保住控制面** |
+| **Dynamic Workflows**（Claude Code 2026/6） | 只有編排函式 `agent()` / `pipeline()` / `parallel()` | ✓ | 只能編排、禁時間亂數：**換到 resume、可重播、決定性** |
+
 ---
 
 ## 1. CodeAct 的核心洞見
@@ -286,15 +298,7 @@ phase(title) / log(msg)                   // 分組與進度回報
 - **檔案修改**：sub-agent 預設跑在 `acceptEdits` 模式
 - **Resume 限制**：只保證在同一個 Claude Code session 內有效
 
-### 程式碼權限演變（綜合對照表）
-
-| 階段 | 程式碼能呼叫什麼 | 能開子代理人? | 決定性 | Resume |
-|---|---|---|---|---|
-| Code Interpreter | Python 套件、檔案（碰不到 agent 工具） | ✗ | 運算層面 | ✗ |
-| CodeAct | agent 工具（固定函式） | ✗ | 無 | ✗ |
-| Code Mode | 包好的 SDK | ✗ | 無 | ✗ |
-| PTC / Deep Agents | agent tools，甚至開子代理人 | ✓ | 無 | ✗ |
-| **Dynamic Workflows** | **只有編排函式** | ✓ | **✓** | **✓** |
+（程式碼權限五階段對照表已放在文章開頭，與主圖並列）
 
 </details>
 
