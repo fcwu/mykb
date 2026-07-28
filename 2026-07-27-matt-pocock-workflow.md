@@ -41,7 +41,7 @@ grill → spec → tickets → implement → review
 - `triage` 是外來 bug／需求的入口，而不是主流程必經步驟。
 - `wayfinder` 用於超過一次 agent session 的大型、不確定工作，以 tracker 上的調查 tickets 逐步找路。
 
-## 三個特別值得保留的 standalone skills
+## 四個特別值得保留的 standalone skills
 
 這三個不是每個 change 的固定步驟，卻各自解決了 workflow 很難取代的問題。
 
@@ -62,6 +62,12 @@ grill → spec → tickets → implement → review
 `wayfinder` 適合一個 session 無法容納、但目前也還不能寫成可靠 spec 的巨大工作。它建立的是 issue tracker 上的「決策地圖」：每張 ticket 要解決一個 decision，而不是交付一片 implementation；已知但尚無法精確表述的部分則留在 fog of war，隨著決策逐步長成新的 tickets。
 
 它最重要的界線是 **plan, don't do**。地圖完成時代表路徑清楚，而不是功能已實作。因此在 OpenSpec 主導的架構中，`wayfinder` 是大型探索的入口；當決策收斂後，將結果壓縮為一個或多個 OpenSpec changes，再由 proposal / tasks / apply 接手實作。[wayfinder](https://github.com/mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md)
+
+### `improve-codebase-architecture`：先看摩擦，再決定要不要重構
+
+這個 skill 的目標不是列出一堆「可以重構」的清單，而是找出讓未來修改變容易的 deepening opportunities：介面相對太複雜的 shallow modules、理解一個概念時必須在許多小模組間跳轉、難以在正確 seam 測試的區域，或耦合外洩的邊界。它會優先從近期 commit history 找 hot spots，並用 `codebase-design` 的 module、interface、depth、seam、locality 等詞彙來描述問題。
+
+輸出是一份暫存的 HTML report，每個候選項都有問題、方案、效益、before/after 圖與推薦強度；先讓人選擇值得探索的項目，再用 grilling 和 domain modeling 釐清設計。因此它適合定期的 codebase health review，或 bug 修好後發現「根本沒有可鎖住問題的 seam」時使用。它不直接授權廣泛重構：候選方案獲得認可後，仍應由 OpenSpec proposal 承接範圍、設計與工作清單。[improve-codebase-architecture](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md)
 
 ## 為何看起來不像 OpenSpec
 
@@ -124,3 +130,4 @@ grill → spec → tickets → implement → review
 - [writing-great-skills](https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-great-skills/SKILL.md)
 - [teach](https://github.com/mattpocock/skills/blob/main/skills/productivity/teach/SKILL.md)
 - [wayfinder](https://github.com/mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md)
+- [improve-codebase-architecture](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md)
