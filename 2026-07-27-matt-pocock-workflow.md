@@ -41,6 +41,28 @@ grill → spec → tickets → implement → review
 - `triage` 是外來 bug／需求的入口，而不是主流程必經步驟。
 - `wayfinder` 用於超過一次 agent session 的大型、不確定工作，以 tracker 上的調查 tickets 逐步找路。
 
+## 三個特別值得保留的 standalone skills
+
+這三個不是每個 change 的固定步驟，卻各自解決了 workflow 很難取代的問題。
+
+### `writing-great-skills`：讓 skill 行為可預期
+
+它不是「如何寫一篇好說明文件」，而是如何讓 agent skill 在多次執行時走出一致的 process。重點包括：model-invoked 與 user-invoked skills 的 context load / cognitive load 取捨、以 completion criterion 防止過早結束、將 reference 做 progressive disclosure，以及用單一真相、pruning、leading words 減少重複與冗詞。
+
+適用於新增、修改或 review reusable skills 時。它可與既有的 skill 測試紀律並用：前者改善 skill 的資訊架構與可預期性，後者驗證 skill 在壓力情境下是否真的改變 agent 行為。[writing-great-skills](https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-great-skills/SKILL.md)
+
+### `teach`：把一次問答變成可持續的學習空間
+
+`teach` 把目前目錄當成一個有狀態的學習 workspace：用 `MISSION.md` 記錄學習動機、`RESOURCES.md` 管理可信來源、learning records 記錄已理解的洞見，並以短小、可回訪的 lesson 和 reference documents 累積進度。它的重點不是「解釋一次」，而是讓後續內容能依使用者的能力邊界與長期保留需求調整。
+
+適合明確要跨多次 session 學習一個主題時。因為它會建立多種 workspace artifacts，應放在專屬學習目錄，而非隨意在一般 repo 根目錄啟動。[teach](https://github.com/mattpocock/skills/blob/main/skills/productivity/teach/SKILL.md)
+
+### `wayfinder`：在迷霧中先找路，不急著交付
+
+`wayfinder` 適合一個 session 無法容納、但目前也還不能寫成可靠 spec 的巨大工作。它建立的是 issue tracker 上的「決策地圖」：每張 ticket 要解決一個 decision，而不是交付一片 implementation；已知但尚無法精確表述的部分則留在 fog of war，隨著決策逐步長成新的 tickets。
+
+它最重要的界線是 **plan, don't do**。地圖完成時代表路徑清楚，而不是功能已實作。因此在 OpenSpec 主導的架構中，`wayfinder` 是大型探索的入口；當決策收斂後，將結果壓縮為一個或多個 OpenSpec changes，再由 proposal / tasks / apply 接手實作。[wayfinder](https://github.com/mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md)
+
 ## 為何看起來不像 OpenSpec
 
 | 面向 | Matt Pocock Skills | OpenSpec |
@@ -81,14 +103,14 @@ grill → spec → tickets → implement → review
 - `to-spec`：會再產生並發佈一份 tracker spec，容易與 OpenSpec proposal/design 分叉。
 - `to-tickets`：只有在 tracker 是協作必要介面時使用，而且只做 OpenSpec tasks 的下游映射；不要反向把 ticket 當規格真相。
 - `implement`：它自帶「依 spec/tickets 實作 → review → commit」的收尾邏輯，會與 OpenSpec 的 apply/verify/sync/archive 生命週期重疊。
-- `triage`、`wayfinder`：保留給 issue intake 與超大型探索，不放入每個一般 change 的必經路徑。
+- `triage`：保留給 issue intake，不放入每個一般 change 的必經路徑；大型未知工作則依上節使用 `wayfinder`，收斂後回到 OpenSpec。
 
 ## 實際判斷規則
 
 1. 單一 repo 變更：直接 OpenSpec；遇到理解或設計風險才插入 Matt 的葉節點 skills。
 2. 需求仍模糊：先 `grill-with-docs`，把共通詞彙和決策帶入 OpenSpec `explore` / `propose`。
 3. 需要跨 team 排程：proposal 核准後，將 OpenSpec tasks 映射到 tracker；ticket 是執行看板，不是另一份規格。
-4. 大型未知工作：先用 `wayfinder` 做探索地圖；可形成多個 OpenSpec changes，但每個可實作變更仍回到 OpenSpec 生命周期。
+4. 大型未知工作：先用 `wayfinder` 解出決策地圖，而不是直接實作；收斂後可形成多個 OpenSpec changes，但每個可實作變更仍回到 OpenSpec 生命周期。
 5. 實作或 review：在 OpenSpec `apply-change` 內使用 Matt 的 `tdd`、`code-review` 等技能，不改變 OpenSpec 的收尾責任。
 
 ## 參考來源
@@ -99,3 +121,6 @@ grill → spec → tickets → implement → review
 - [to-spec](https://github.com/mattpocock/skills/blob/main/skills/engineering/to-spec/SKILL.md)
 - [to-tickets](https://github.com/mattpocock/skills/blob/main/skills/engineering/to-tickets/SKILL.md)
 - [implement](https://github.com/mattpocock/skills/blob/main/skills/engineering/implement/SKILL.md)
+- [writing-great-skills](https://github.com/mattpocock/skills/blob/main/skills/productivity/writing-great-skills/SKILL.md)
+- [teach](https://github.com/mattpocock/skills/blob/main/skills/productivity/teach/SKILL.md)
+- [wayfinder](https://github.com/mattpocock/skills/blob/main/skills/engineering/wayfinder/SKILL.md)
