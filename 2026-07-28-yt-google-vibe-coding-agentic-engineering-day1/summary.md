@@ -202,13 +202,3 @@ AI 壓縮 SDLC，但**壓得很不均勻**：implementation 從幾週變幾小�
 | 3 | skills、記憶、context 優化 |
 | 4 | security 與 evaluation |
 | 5 | spec-driven 的 production level 開發 |
-
-## 存疑與待查證
-
-影片講得很順，但幾個關鍵數字都沒給出處，引用前值得回頭查原文：
-
-- **METR「資深工程師慢 19%」** — 值得找原始研究。作者把它跟「生產力提升 25–39%」並列說「不衝突」，但兩個數據的受測族群、任務類型、熟悉度條件差很多，直接並列有點粗。引用前要看原始 methodology。
-- **Terminal Bench 2.0「不換 model 只改 harness，30 名外 → 前 5」** — 沒說是哪個團隊、改了什麼。這是全片最有說服力的數字，但也最需要驗證。
-- **LangChain「加 13.7 分」** — 同上，需要原始 blog／論文出處，也要確認 13.7 分是哪個 benchmark 的絕對分數。
-- **「業界調查生產力提升 25–39%」** — 沒指明是哪份調查。
-- Karpathy 補 `agentic engineering` 一詞的時間（影片說 2026 年初）與原始貼文出處未標，需要查證。
